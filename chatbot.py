@@ -1,15 +1,11 @@
-# Import necessary libraries
 import openai
 import os
 from flask import Flask, request, jsonify
 from flask_ngrok import run_with_ngrok
 from dotenv import load_dotenv
-
-# Load environment variables from .env file
 load_dotenv()
 
-# Set up OpenAI API key from environment variable
-openai.api_key = os.getenv('OPENAI_API_KEY')
+openai.api_key = os.getenv('ENTER_YOUR_OPENAI_API_KEY')
 
 # Knowledge base
 knowledge_base = {
@@ -37,12 +33,10 @@ knowledge_base = {
     ]
 }
 
-# Initialize Flask app
 app = Flask(__name__)
-run_with_ngrok(app)  # Start ngrok when app is run
+run_with_ngrok(app) 
 
 def search_knowledge_base(query):
-    # Search the knowledge base for a relevant answer
     for category, items in knowledge_base.items():
         for item in items:
             if query.lower() in item.get('question', '').lower():
@@ -57,10 +51,9 @@ def chat():
     response = search_knowledge_base(user_message)
 
     if not response:
-        # Use OpenAI API to generate a response if the query is not found in the knowledge base
         try:
             openai_response = openai.Completion.create(
-                engine="text-davinci-003",  # Use the appropriate engine
+                engine="text-davinci-003",  
                 prompt=user_message,
                 max_tokens=150
             )
